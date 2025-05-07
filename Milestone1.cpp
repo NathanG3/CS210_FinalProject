@@ -25,7 +25,7 @@ void addToCache(string& key, string& population)
 
     if (cache.size() > 10)
     {
-        cache.erase(cache.begin());
+        cache.pop_back();
     }
 }
 bool searchCache(string& key, string& population)
@@ -33,8 +33,12 @@ bool searchCache(string& key, string& population)
     for (int i = 0; i < cache.size(); i++)
     {
         if (cache[i].key == key)
+        {
+            population = cache[i].population;
             return true;
+        }
     }
+    return false;
 }
 
 
@@ -78,7 +82,8 @@ int main()
         getline(cin, city_name);
         string key = country_code + "," + city_name;
         string population;
-        if (searchCache(key, population)) {
+        if (searchCache(key, population))
+        {
             cout << population << endl;
         }
         else
@@ -91,6 +96,12 @@ int main()
             }
             cout << population << endl;
             addToCache(key, population);
+        }
+
+        cout << "\n";
+        for (const auto& entry : cache)
+        {
+            cout << entry.key << " : " << entry.population << endl;
         }
 
     }
