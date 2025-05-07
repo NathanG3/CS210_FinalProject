@@ -11,6 +11,32 @@
 
 using namespace std;
 
+string searchData(string& country_code, string& city_name)
+{
+    string filename = "world_cities.csv";
+    ifstream file;
+    file.open(filename);
+
+    if (!file.is_open()) {
+        cerr << "Failed to open file: " << filename << endl;
+        return "";
+    }
+
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string country, city, population;
+        if (getline(ss, country, ',') && getline(ss, city, ',') && getline(ss, population))
+        {
+            if (city == city_name && country == country_code)
+            {
+                return population;
+            }
+        }
+    }
+    return "not found";
+}
 int main()
 {
     string filename = "world_cities.csv";
