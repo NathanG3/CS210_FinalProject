@@ -43,9 +43,11 @@ class FIFOcache {
 
     void display()
     {
-      for (const auto& entry : q)
+      queue<string> temp = q;
+      while (!temp.empty())
       {
-        cout << entry << " : " << cache[entry] << endl;
+        cout << temp.front() << " " << endl;
+        temp.pop();
       }
     }
 
