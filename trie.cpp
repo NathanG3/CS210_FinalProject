@@ -7,6 +7,7 @@ using namespace std;
 struct TrieNode {
     bool isEndOfWord;
     unordered_map<char, TrieNode*> children;
+    unordered_map<string, string> cities;
 
     TrieNode() : isEndOfWord(false) {}
 };
@@ -20,26 +21,31 @@ public:
         root = new TrieNode();
     }
 
-    void insert(const string& name) {
+    void insert(const string& city, const string& countryCode, const string& population) {
         TrieNode* node = root;
-        for (char c : name) {
+        for (char c : city) {
             c = tolower(c); // Case-insensitive
             if (node->children.count(c) == 0)
                 node->children[c] = new TrieNode();
             node = node->children[c];
         }
         node->isEndOfWord = true;
+        node->cities[countryCode] = population;
     }
 
-    bool search(const string& name) {
+    bool search(const string& city, const string& countryCode, const string& population) {
         TrieNode* node = root;
-        for (char c : name) {
+        for (char c : city) {
             c = tolower(c);
             if (node->children.count(c) == 0)
                 return false;
             node = node->children[c];
         }
-        return node->isEndOfWord;
+        if (node->isEndOfWord && node->cities.count(countryCode))
+          return true;
+
+        return false;
+
     }
 
     void printTrie(TrieNode* node = nullptr, string prefix = "", string indent = "") {
@@ -53,16 +59,3 @@ public:
 };
 
 
-int main() {
-    NameTrie trie;
-
-    // Insert names
-    trie.insert("Saba");
-    trie.insert("Sam");
-    trie.insert("David");
-    trie.insert("Dave");
-
-    trie.printTrie();
-
-    return 0;
-}
