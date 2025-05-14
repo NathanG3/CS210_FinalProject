@@ -10,9 +10,9 @@ using namespace std;
 class Cache
 {
 public:
-    virtual bool getstring(string& key, string& population);
-    virtual void addstring(string& key, string& population);
-    virtual void display();
-    virtual ~Cache();
+    virtual bool getstring(string& key, string& population) = 0;
+    virtual void addstring(string& key, string& population) = 0;
+    virtual void display() = 0;
+    virtual ~Cache() = default;
 };
 #endif //CACHE_H

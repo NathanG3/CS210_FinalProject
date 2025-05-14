@@ -9,14 +9,14 @@
 #include <queue>
 #include <vector>
 #include <random>
-#include "Cache.cpp"
+#include "Cache.h"
 using namespace std;
 
 class Randomcache : public Cache {
   unordered_map<string,string> cache;
   vector<string> keys;
   public:
-    void addstring(string key, string value)
+    void addstring(string& key, string& population) override
     {
       if(cache.size() >= 10)
       {
@@ -24,10 +24,10 @@ class Randomcache : public Cache {
         cache.erase(keys[index]);
         keys.erase(keys.begin() + index);
       }
-      cache[key] = value;
+      cache[key] = population;
       keys.push_back(key);
     }
-    bool getstring(string& key, string& population)
+    bool getstring(string& key, string& population) override
     {
       if(cache.find(key) != cache.end())
       {
@@ -36,7 +36,7 @@ class Randomcache : public Cache {
       }
       return false;
     }
-    void display()
+    void display() override
     {
       for (const auto& entry : keys)
       {

@@ -8,15 +8,16 @@
 #include <unordered_map>
 #include <queue>
 #include <vector>
+#include "Cache.h"
 
 using namespace std;
 
-class FIFOcache {
+class FIFOcache : public Cache{
   queue<string> q;
   unordered_map<string, string> cache;
 
   public:
-    void addstring(string& key, string& population)
+    void addstring(string& key, string& population) override
     {
       if (cache.find(key) != cache.end())
       {
@@ -30,9 +31,9 @@ class FIFOcache {
       cache[key] = population;
     }
 
-    bool getstring(string& key, string& population)
+    bool getstring(string& key, string& population) override
     {
-      if (cache.find(key) == cache.end())
+      if (cache.find(key) != cache.end())
       {
         population = cache[key];
         return true;
@@ -41,7 +42,7 @@ class FIFOcache {
       return false;
     }
 
-    void display()
+    void display() override
     {
       queue<string> temp = q;
       while (!temp.empty())

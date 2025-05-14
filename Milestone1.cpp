@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -74,14 +75,14 @@ string searchData(string& country_code, string& city_name)
 int main()
 {
     NameTrie trie;
-    Cache cache;
+    Cache* cache;
     cout << "Select cache type(1 = FIFO, 2 = Randomcache):" << endl;
     int choice;
     cin >> choice;
     if (choice == 1)
-        cache = FIFOcache();
+        cache = new FIFOcache();
     else if (choice == 2)
-        cache = Randomcache();
+        cache = new Randomcache();
 
     string filename = "world_cities.csv";
     ifstream file;
@@ -115,7 +116,7 @@ int main()
         getline(cin, city_name);
         string key = country_code + "," + city_name;
         string population;
-        if (cache.getstring(key, population))
+        if (cache->getstring(key, population))
         {
             cout << "Cache: " << population << endl;
         }
@@ -125,10 +126,10 @@ int main()
             {
                 cout << "trie: " << population << endl;
             }
-            cache.addstring(key, population);
+            cache->addstring(key, population);
         }
 
-        cache.display();
+        cache->display();
 
     }
     // string country_code, city_name;

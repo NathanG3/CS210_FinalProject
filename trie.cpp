@@ -33,7 +33,7 @@ public:
         node->cities[countryCode] = population;
     }
 
-    bool search(const string& city, const string& countryCode, const string& population) {
+    bool search(const string& city, const string& countryCode, string& population) {
         TrieNode* node = root;
         for (char c : city) {
             c = tolower(c);
@@ -42,7 +42,10 @@ public:
             node = node->children[c];
         }
         if (node->isEndOfWord && node->cities.count(countryCode))
-          return true;
+        {
+            population = node->cities[countryCode];
+            return true;
+        }
 
         return false;
 
