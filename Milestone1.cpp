@@ -8,6 +8,9 @@
 #include <unordered_map>
 #include <queue>
 #include <vector>
+#include "trie.cpp"
+#include "FIFOcache.cpp"
+#include "Randomcache.cpp"
 
 using namespace std;
 
@@ -70,6 +73,36 @@ string searchData(string& country_code, string& city_name)
 }
 int main()
 {
+    NameTrie trie;
+    Cache cache;
+    cout << "Select cache type(1 = FIFO, 2 = Randomcache):" << endl;
+    int choice;
+    cin >> choice;
+    if (choice == 1)
+        cache = FIFOcache();
+    else if (choice == 2)
+        cache = Randomcache();
+
+    string filename = "world_cities.csv";
+    ifstream file;
+    file.open(filename);
+
+    if (!file.is_open()) {
+        cerr << "Failed to open file: " << filename << endl;
+    }
+
+    string line;
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string country, city, population;
+        if (getline(ss, country, ',') && getline(ss, city, ',') && getline(ss, population))
+        {
+            trie.insert(city, country, population);
+        }
+    }
+    file.close();
+
     while (true)
     {
         string country_code, city_name;
@@ -82,27 +115,20 @@ int main()
         getline(cin, city_name);
         string key = country_code + "," + city_name;
         string population;
-        if (searchCache(key, population))
+        if (cache.getstring(key, population))
         {
-            cout << population << endl;
+            cout << "Cache: " << population << endl;
         }
         else
         {
-            population = searchData(country_code, city_name);
-            if (population == "not found")
+            if (trie.search(city_name, country_code, population))
             {
-                cout << "Not found" << endl;
-                continue;
+                cout << "trie: " << population << endl;
             }
-            cout << population << endl;
-            addToCache(key, population);
+            cache.addstring(key, population);
         }
 
-        cout << "\n";
-        for (const auto& entry : cache)
-        {
-            cout << entry.key << " : " << entry.population << endl;
-        }
+        cache.display();
 
     }
     // string country_code, city_name;
